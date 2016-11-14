@@ -1,29 +1,29 @@
-import { Games, Players, Cards } from '../api/collections'
-import React, { PropTypes } from 'react'
+import React from 'react'
 import { createContainer } from 'meteor/react-meteor-data'
+import { Meteor } from 'meteor/meteor'
+
+import { Games, Players, Cards } from '../api/collections'
 import Spinner from './spinner'
 
-const GamesClient = (props) => {
-  if (!props.ready) {
+const GamesClient = ({ ready, cards = [] }) => {
+  if (!ready) {
     return <Spinner />
   }
 
   return (
     <div className='row'>
-      {props.cards.map(card => <Card card={card} key={card._id} />)}
+      {cards.map(card => <Card card={card} key={card._id} />)}
     </div>
   )
 }
 
-const Card = ({ card }) => {
-  return (
-    <div className='col s6 m4 l3'>
-      <div className='card-panel white'>
-        <div className='black-text'>{card.text}</div>
-      </div>
+const Card = ({ card }) => (
+  <div className='col s6 m4 l3'>
+    <div className='card-panel white'>
+      <div className='black-text'>{card.text}</div>
     </div>
-  )
-}
+  </div>
+)
 
 export default createContainer((props) => {
   const handle = Meteor.subscribe('game', props.params.id)
@@ -35,9 +35,9 @@ export default createContainer((props) => {
   }
 
   return {
-    game: game,
+    game,
     ready: handle.ready(),
-    player: player,
-    cards: cards
+    player,
+    cards
   }
 }, GamesClient)
