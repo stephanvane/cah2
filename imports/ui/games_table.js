@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { createContainer } from 'meteor/react-meteor-data'
 import { Games } from '../api/collections'
 import Spinner from './spinner'
+import Card from './card'
 
 const GamesTable = ({ ready, game }) => {
   function handleNewRound() {
@@ -20,13 +21,12 @@ const GamesTable = ({ ready, game }) => {
       </div>
       <div className='divider' />
       <div className='section'>
+        {game.players.map(player => player)}
+      </div>
+      <div className='divider' />
+      <div className='section'>
         <div className='row'>
-          <div className='col s4'>
-            {game.players.map(player => player)}
-          </div>
-          <div className='col s8'>
-            {game.table.cards.map(card => <Card card={card} key={card._id} />)}
-          </div>
+          {game.table.cards.map(card => <Card card={card} key={card._id} />)}
         </div>
       </div>
       <div className='divider' />
@@ -46,10 +46,6 @@ GamesTable.propTypes = {
   })
 }
 
-const Card = ({ card }) => (
-  <div>{card}</div>
-)
-
 export default createContainer((props) => {
   const handle = Meteor.subscribe('game', props.params.id)
   const game = Games.findOne(props.params.id)
@@ -59,6 +55,3 @@ export default createContainer((props) => {
     ready: handle.ready()
   }
 }, GamesTable)
-Card.propTypes = {
-  card: PropTypes.any
-}

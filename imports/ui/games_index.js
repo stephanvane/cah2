@@ -28,6 +28,13 @@ const GamesIndex = ({ games }) => {
     </div>
   )
 }
+GamesIndex.propTypes = {
+  games: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  }).isRequired).isRequired
+}
+
 
 const Game = ({ game }) => (
   <div className='collection-item'>
@@ -39,19 +46,11 @@ const Game = ({ game }) => (
     <div className='clearfix' />
   </div>
 )
-
 Game.propTypes = {
   game: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   }).isRequired
-}
-
-GamesIndex.propTypes = {
-  games: PropTypes.arrayOf(PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
-  }).isRequired).isRequired
 }
 
 export default createContainer(() => ({

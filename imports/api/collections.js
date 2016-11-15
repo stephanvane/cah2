@@ -36,8 +36,19 @@ Meteor.methods({
       const cards = game.whiteDeck.slice(0, num)
 
       Players.update(player, { $addToSet: { cards: { $each: cards } } })
-      Games.update(game, { $pull: { whiteDeck: { $in: cards } } })
+
+      if (Meteor.isServer) {
+        Games.update(game, { $pull: { whiteDeck: { $in: cards } }, $set: { 'table.cards': [] } })
+      }
     })
+  },
+  'games.playCard': (gameId, cardId) => {
+    const game = Games.findOne(gameId)
+    const card = Cards.findOne(cardId)
+    const player = Players.findOne({ userId: Meteor.userId() })
+
+    Games.update(game._id, { $addToSet: { 'table.cards': card } })
+    Players.update(player._id, { $pull: { cards: cardId } })
   }
 })
 
