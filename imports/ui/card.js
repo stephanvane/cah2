@@ -11,13 +11,13 @@ export default class Card extends Component {
   }
 
   render() {
-    const panelColor = !(this.props.card.type === 'white') ? 'white' : 'black'
-    const textColor = !(this.props.card.type === 'white') ? 'black' : 'wite'
+    const panelColor = (this.props.card.type === 'white') ? 'white' : 'black'
+    const textColor = (this.props.card.type === 'white') ? 'black' : 'white'
 
     return (
       <div className='col s6 m4 l3'>
-        <div className='card-panel white' onClick={this._onClick}>
-          <div className='black-text'>{this.props.card.text}</div>
+        <div className={`card-panel ${panelColor}`} onClick={this._onClick}>
+          <div className={`${textColor}-text`}>{this.props.card.text}</div>
         </div>
       </div>
     )
