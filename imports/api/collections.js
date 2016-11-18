@@ -8,6 +8,7 @@ export const Games = new Mongo.Collection('games')
 
 if (Meteor.isServer) {
   Meteor.publish('game', id => Games.find(id))
+  Meteor.publish('games', () => Games.find({}, { fields: { _id: 1, name: 1 } }))
 }
 
 function newDeck(type) {
@@ -53,6 +54,9 @@ Meteor.methods({
 
     Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
     Players.update(player._id, { $pull: { cards: cardId } })
+  },
+  'games.remove': (gameId) => {
+    Games.remove(gameId)
   }
 })
 

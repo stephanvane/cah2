@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { Link } from 'react-router'
 import { createContainer } from 'meteor/react-meteor-data'
@@ -15,12 +15,10 @@ const GamesIndex = ({ games }) => {
       <div className='section'>
         <h1>Games</h1>
       </div>
-      <div className='divider' />
       <div className='section'>
         <div className='collection'>
           {games.map(game => <Game game={game} key={game._id} />)}
         </div>
-        <div className='divider' />
         <div className='section'>
           <button className='btn' onClick={handleNewGame}>New game</button>
         </div>
@@ -36,16 +34,31 @@ GamesIndex.propTypes = {
 }
 
 
-const Game = ({ game }) => (
-  <div className='collection-item'>
-    {game.name}
-    <div className='secondary-content'>
-      <Link to={`/games/${game._id}/client`} className='btn'>client</Link>
-      <Link to={`/games/${game._id}/table`} className='btn'>table</Link>
-    </div>
-    <div className='clearfix' />
-  </div>
-)
+class Game extends Component {
+  constructor(props) {
+    super(props)
+    this.handleDelete = this.handleDelete.bind(this)
+  }
+
+  handleDelete() {
+    Meteor.call('games.remove', this.props.game._id)
+  }
+
+  render() {
+    return (
+      <div className='collection-item'>
+        {this.props.game.name}
+        <div className='secondary-content'>
+          <Link to={`/games/${this.props.game._id}/client`} className='btn'>client</Link>
+          <Link to={`/games/${this.props.game._id}/table`} className='btn'>table</Link>
+          <button className='btn red' onClick={this.handleDelete}>delete</button>
+        </div>
+        <div className='clearfix' />
+      </div>
+    )
+  }
+}
+
 Game.propTypes = {
   game: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -53,6 +66,7 @@ Game.propTypes = {
   }).isRequired
 }
 
-export default createContainer(() => ({
-  games: Games.find({}).fetch()
-}), GamesIndex)
+export default createContainer(() => {
+  Meteor.subscribe('games')
+  return { games: Games.find({}).fetch() }
+}, GamesIndex)

@@ -19,23 +19,19 @@ const GamesTable = ({ ready, game }) => {
       <div className='section'>
         <h1>Table</h1>
       </div>
-      <div className='divider' />
       <div className='section'>
         {game.players.map(player => player)}
       </div>
-      <div className='divider' />
       <div className='section'>
         <div className='row'>
           {game.table.blackCard && <Card card={game.table.blackCard} />}
         </div>
       </div>
-      <div className='divider' />
       <div className='section'>
         <div className='row'>
           {game.table.whiteCards.map(card => <Card card={card} key={card._id} />)}
         </div>
       </div>
-      <div className='divider' />
       <div className='section'>
         <button className='btn' onClick={handleNewRound}>New round</button>
       </div>
