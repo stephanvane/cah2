@@ -26,7 +26,13 @@ const GamesTable = ({ ready, game }) => {
       <div className='divider' />
       <div className='section'>
         <div className='row'>
-          {game.table.cards.map(card => <Card card={card} key={card._id} />)}
+          {game.table.blackCard && <Card card={game.table.blackCard} />}
+        </div>
+      </div>
+      <div className='divider' />
+      <div className='section'>
+        <div className='row'>
+          {game.table.whiteCards.map(card => <Card card={card} key={card._id} />)}
         </div>
       </div>
       <div className='divider' />
@@ -41,7 +47,8 @@ GamesTable.propTypes = {
   game: PropTypes.shape({
     players: PropTypes.arrayOf(PropTypes.string).isRequired,
     table: PropTypes.shape({
-      cards: PropTypes.arrayOf(PropTypes.any)
+      whiteCards: PropTypes.arrayOf(PropTypes.any),
+      blackCard: PropTypes.any
     })
   })
 }

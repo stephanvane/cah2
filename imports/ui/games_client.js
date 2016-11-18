@@ -49,7 +49,6 @@ export default createContainer((props) => {
   const player = Players.findOne({ userId: Meteor.userId() })
   let cards
   if (player) {
-    // cards = player.cards.map(card => Cards.findOne(card))
     cards = Cards.find({ _id: { $in: player.cards } }).fetch()
   }
 
