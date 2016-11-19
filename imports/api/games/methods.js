@@ -1,15 +1,9 @@
-import { Mongo } from 'meteor/mongo'
 import { Meteor } from 'meteor/meteor'
 import { _ } from 'meteor/underscore'
 
-export const Cards = new Mongo.Collection('cards')
-export const Players = new Mongo.Collection('players')
-export const Games = new Mongo.Collection('games')
-
-if (Meteor.isServer) {
-  Meteor.publish('game', id => Games.find(id))
-  Meteor.publish('games', () => Games.find({}, { fields: { _id: 1, name: 1 } }))
-}
+import Games from './games'
+import Cards from '../cards/cards'
+import Players from '../players/players'
 
 function newDeck(type) {
   let cards = Cards.find({ type }).fetch()
@@ -19,14 +13,16 @@ function newDeck(type) {
 
 Meteor.methods({
   'games.newGame': (name) => {
+    console.log('test123')
     Games.insert({
       name,
       whiteDeck: newDeck('white'),
       blackDeck: newDeck('black'),
       table: { whiteCards: [] },
-      players: [Players.find({}).fetch()[0]._id]
+      players: (Meteor.userId()) ? [Meteor.userId()] : []
     })
   },
+
   'games.newRound': (gameId) => {
     const game = Games.findOne(gameId)
     const players = Players.find({ _id: { $in: game.players } })
@@ -47,6 +43,7 @@ Meteor.methods({
       $set: { 'table.blackCard': blackCard, 'table.whiteCards': [] },
       $pop: { blackDeck: -1 } })
   },
+
   'games.playCard': (gameId, cardId) => {
     const game = Games.findOne(gameId)
     const card = Cards.findOne(cardId)
@@ -55,68 +52,8 @@ Meteor.methods({
     Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
     Players.update(player._id, { $pull: { cards: cardId } })
   },
+
   'games.remove': (gameId) => {
     Games.remove(gameId)
   }
 })
-
-// cardSchema = new SimpleSchema({
-//   type: {
-//     type: String,
-//     allowedValues: ['white', 'black']
-//   },
-//   text: {
-//     type: String
-//   },
-//   set: {
-//     type: String,
-//     allowedValues: ['basic'],
-//     defaultValue: 'basic'
-//   }
-// });
-//
-//
-// playerSchema = new SimpleSchema({
-//   name: {
-//     type: String,
-//     max: 50
-//   },
-//   cards: {
-//     type: [cardSchema]
-//   },
-//   userId: {
-//     type: 'String',
-//     regEx: SimpleSchema.RegEx.Id
-//   },
-//   gameId: {
-//     type: 'String',
-//     regEx: SimpleSchema.RegEx.Id,
-//     optional: true
-//   }
-// });
-//
-//
-// gameSchema = new SimpleSchema({
-//   name: {
-//     type: String,
-//     max: 50
-//   },
-//   whiteDeck: {
-//     type: [Object],
-//     blackbox: true
-//   },
-//   blackDeck: {
-//     type: [Object],
-//     blackbox: true
-//   },
-//   table: {
-//     type: Object
-//   },
-//   'table.cards': {
-//     type: [cardSchema]
-//   },
-//   players: {
-//     type: [String],
-//     regEx: SimpleSchema.RegEx.Id
-//   }
-// });

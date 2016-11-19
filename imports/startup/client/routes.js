@@ -5,9 +5,8 @@ import GamesIndex from '../../ui/games_index.js'
 import GamesTable from '../../ui/games_table.js'
 import GamesClient from '../../ui/games_client.js'
 import App from '../../ui/app.js'
-import { Cards } from '/imports/api/collections'
 
-export const renderRoutes = () => (
+const renderRoutes = () => (
   <Router history={browserHistory}>
     <Route path='/' component={App}>
       <Route path='/games' component={GamesIndex} />
@@ -16,3 +15,5 @@ export const renderRoutes = () => (
     </Route>
   </Router>
 )
+
+export default renderRoutes

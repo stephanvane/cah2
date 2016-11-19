@@ -1,8 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { createContainer } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
+import { Session } from 'meteor/session'
 
-import { Games, Players, Cards } from '../api/collections'
+import Games from '../api/games/games'
+import Cards from '../api/cards/cards'
+import Players from '../api/players/players'
+
 import Spinner from './spinner'
 import Card from './card'
 
@@ -13,6 +17,7 @@ class GamesClient extends Component {
   }
 
   handlePlayCard(cardId) {
+    Session.set('asdf', 'blablabla')
     Meteor.call('games.playCard', this.props.game._id, cardId)
   }
 
@@ -23,6 +28,7 @@ class GamesClient extends Component {
 
     return (
       <div>
+        {this.props.a}
         <div className='row'>
           {this.props.cards.map(card => <Card
             card={card} key={card._id}
@@ -33,6 +39,7 @@ class GamesClient extends Component {
     )
   }
 }
+
 GamesClient.propTypes = {
   game: PropTypes.shape({
     _id: PropTypes.string.isRequired
@@ -47,15 +54,17 @@ export default createContainer((props) => {
   const handle = Meteor.subscribe('game', props.params.id)
   const game = Games.findOne(props.params.id)
   const player = Players.findOne({ userId: Meteor.userId() })
-  let cards
-  if (player) {
-    cards = Cards.find({ _id: { $in: player.cards } }).fetch()
-  }
+  const cards = (player) ? player.cards : []
+  const a = Session.get('asdf')
+  // if (player) {
+  //   cards = Cards.find({ _id: { $in: player.cards } }).fetch()
+  // }
 
   return {
     game,
     ready: handle.ready(),
     player,
-    cards
+    cards,
+    a
   }
 }, GamesClient)

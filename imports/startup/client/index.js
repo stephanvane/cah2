@@ -1,0 +1,1 @@
+import '../../api/games/methods'

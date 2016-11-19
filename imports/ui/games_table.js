@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { createContainer } from 'meteor/react-meteor-data'
-import { Games } from '../api/collections'
+
+import Games from '../api/games/games'
+
 import Spinner from './spinner'
 import Card from './card'
 
