@@ -46,7 +46,8 @@ Meteor.methods({
   'games.playCard': (gameId, cardId) => {
     const game = Games.findOne(gameId)
     const card = Cards.findOne(cardId)
-    const player = Players.findOne({ userId: Meteor.userId() })
+    const player = Players.findOne({ userId: Meteor.userId(), gameId })
+    if (Meteor.isServer) card.hidden = true // TODO: make work on client
     Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
     Players.update(player._id, { $pull: { cards: card } })
   },

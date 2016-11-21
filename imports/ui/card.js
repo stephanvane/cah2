@@ -11,13 +11,15 @@ export default class Card extends Component {
   }
 
   render() {
-    const panelColor = (this.props.card.type === 'white') ? 'white' : 'black'
-    const textColor = (this.props.card.type === 'white') ? 'black' : 'white'
+    const card = this.props.card
+    const panelColor = (card.type === 'white') ? 'white' : 'black'
+    const textColor = (card.type === 'white') ? 'black' : 'white'
+    const cardText = (card.hidden) ? '' : card.text
 
     return (
       <div className='col s6 m4 l3'>
         <div className={`card-panel ${panelColor}`} onClick={this._onClick}>
-          <div className={`${textColor}-text`}>{this.props.card.text}</div>
+          <div className={`${textColor}-text`}>{cardText}</div>
         </div>
       </div>
     )
@@ -27,7 +29,8 @@ Card.propTypes = {
   card: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    hidden: PropTypes.string
   }).isRequired,
-  click: PropTypes.func
+  click: PropTypes.func,
 }
