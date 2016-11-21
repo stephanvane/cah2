@@ -12,6 +12,10 @@ const GamesTable = ({ ready, game }) => {
     Meteor.call('games.newRound', game._id)
   }
 
+  function handleReveal() {
+    Meteor.call('games.reveal', game._id)
+  }
+
   if (!ready) {
     return <Spinner />
   }
@@ -31,11 +35,13 @@ const GamesTable = ({ ready, game }) => {
       </div>
       <div className='section'>
         <div className='row'>
-          {game.table.whiteCards.map(card => <Card card={card} key={card._id} />)}
+          {game.table.whiteCards.map(card =>
+            <Card card={card} key={card._id} hidden={game.table.hidden} />)}
         </div>
       </div>
       <div className='section'>
         <button className='btn' onClick={handleNewRound}>New round</button>
+        <button className='btn' onClick={handleReveal}>Reveal cards</button>
       </div>
     </div>
   )
@@ -46,7 +52,8 @@ GamesTable.propTypes = {
     players: PropTypes.arrayOf(PropTypes.string).isRequired,
     table: PropTypes.shape({
       whiteCards: PropTypes.arrayOf(PropTypes.any),
-      blackCard: PropTypes.any
+      blackCard: PropTypes.any,
+      hidden: PropTypes.bool
     })
   })
 }

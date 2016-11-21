@@ -17,7 +17,7 @@ Meteor.methods({
       name,
       whiteDeck: newDeck('white'),
       blackDeck: newDeck('black'),
-      table: { whiteCards: [] },
+      table: { whiteCards: [], hidden: true },
       players: []
     })
   },
@@ -39,7 +39,7 @@ Meteor.methods({
 
     const blackCard = Cards.findOne(game.blackDeck[0])
     Games.update(game._id, {
-      $set: { 'table.blackCard': blackCard, 'table.whiteCards': [] },
+      $set: { 'table.blackCard': blackCard, 'table.whiteCards': [], 'table.hidden': true },
       $pop: { blackDeck: -1 } })
   },
 
@@ -47,14 +47,18 @@ Meteor.methods({
     const game = Games.findOne(gameId)
     const card = Cards.findOne(cardId)
     const player = Players.findOne({ userId: Meteor.userId(), gameId })
-    if (Meteor.isServer) card.hidden = true // TODO: make work on client
+    // if (Meteor.isServer) card.hidden = true // TODO: make work on client
     Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
-    Players.update(player._id, { $pull: { cards: card } })
+    Players.update(player._id, { $pull: { cards: { _id: cardId } } })
   },
 
   'games.remove': (gameId) => {
     Games.remove(gameId)
     Players.remove({ gameId })
+  },
+
+  'games.reveal': (gameId) => {
+    Games.update(gameId, { $set: { 'table.hidden': false } })
   },
 
   'games.join': (gameId) => {

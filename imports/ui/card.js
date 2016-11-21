@@ -14,7 +14,7 @@ export default class Card extends Component {
     const card = this.props.card
     const panelColor = (card.type === 'white') ? 'white' : 'black'
     const textColor = (card.type === 'white') ? 'black' : 'white'
-    const cardText = (card.hidden) ? '' : card.text
+    const cardText = (this.props.hidden) ? '' : card.text
 
     return (
       <div className='col s6 m4 l3'>
@@ -29,8 +29,8 @@ Card.propTypes = {
   card: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    hidden: PropTypes.string
+    type: PropTypes.string.isRequired
   }).isRequired,
+  hidden: PropTypes.bool,
   click: PropTypes.func,
 }
