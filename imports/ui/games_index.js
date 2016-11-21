@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Meteor } from 'meteor/meteor'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 import { createContainer } from 'meteor/react-meteor-data'
 
 import Games from '../api/games/games'
@@ -38,10 +38,16 @@ class Game extends Component {
   constructor(props) {
     super(props)
     this.handleDelete = this.handleDelete.bind(this)
+    this.handleJoin = this.handleJoin.bind(this)
   }
 
   handleDelete() {
     Meteor.call('games.remove', this.props.game._id)
+  }
+
+  handleJoin() {
+    Meteor.call('games.join', this.props.game._id)
+    browserHistory.push(`/games/${this.props.game._id}/client`)
   }
 
   render() {
@@ -49,7 +55,8 @@ class Game extends Component {
       <div className='collection-item'>
         {this.props.game.name}
         <div className='secondary-content'>
-          <Link to={`/games/${this.props.game._id}/client`} className='btn'>client</Link>
+          {/* <Link to={`/games/${this.props.game._id}/client`} className='btn'>client</Link> */}
+          <button className='btn' onClick={this.handleJoin}>join game</button>
           <Link to={`/games/${this.props.game._id}/table`} className='btn'>table</Link>
           <button className='btn red' onClick={this.handleDelete}>delete</button>
         </div>

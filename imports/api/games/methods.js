@@ -13,13 +13,12 @@ function newDeck(type) {
 
 Meteor.methods({
   'games.newGame': (name) => {
-    console.log('test123')
     Games.insert({
       name,
       whiteDeck: newDeck('white'),
       blackDeck: newDeck('black'),
       table: { whiteCards: [] },
-      players: (Meteor.userId()) ? [Meteor.userId()] : []
+      players: []
     })
   },
 
@@ -29,7 +28,7 @@ Meteor.methods({
 
     players.forEach((player) => {
       const num = 10 - player.cards.length
-      const cards = game.whiteDeck.slice(0, num)
+      const cards = Cards.find({ _id: { $in: game.whiteDeck.slice(0, num) } }).fetch()
 
       Players.update(player, { $addToSet: { cards: { $each: cards } } })
 
@@ -48,12 +47,19 @@ Meteor.methods({
     const game = Games.findOne(gameId)
     const card = Cards.findOne(cardId)
     const player = Players.findOne({ userId: Meteor.userId() })
-
     Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
-    Players.update(player._id, { $pull: { cards: cardId } })
+    Players.update(player._id, { $pull: { cards: card } })
   },
 
   'games.remove': (gameId) => {
     Games.remove(gameId)
+    Players.remove({ gameId })
+  },
+
+  'games.join': (gameId) => {
+    const playerData = { gameId, userId: Meteor.userId() }
+    let player = Players.findOne(playerData)
+    player = (player) ? player._id : Players.insert({ ...playerData, cards: [] })
+    Games.update(gameId, { $addToSet: { players: player } })
   }
 })
