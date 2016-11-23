@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { Link, browserHistory } from 'react-router'
 import { createContainer } from 'meteor/react-meteor-data'
 
-import Games from '../api/games/games'
+import Games from '../../../api/games/games'
 
 const GamesIndex = ({ games }) => {
   function handleNewGame() {

@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { createContainer } from 'meteor/react-meteor-data'
 
-import Games from '../api/games/games'
+import Games from '../../../api/games/games'
 
-import Spinner from './spinner'
-import Card from './card'
+import Spinner from '../../components/spinner'
+import Card from '../../components/card'
 
 const GamesTable = ({ ready, game }) => {
   function handleNewRound() {
