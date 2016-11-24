@@ -24,13 +24,11 @@ class GamesClient extends Component {
     }
 
     return (
-      <div>
-        <div className='row'>
-          {this.props.cards.map(card => <Card
-            card={card} key={card._id}
-            click={this.handlePlayCard}
-          />)}
-        </div>
+      <div className='mdl-grid'>
+        {this.props.cards.map(card => <Card
+          card={card} key={card._id}
+          click={this.handlePlayCard}
+        />)}
       </div>
     )
   }

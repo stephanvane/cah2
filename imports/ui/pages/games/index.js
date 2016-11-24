@@ -12,16 +12,14 @@ const GamesIndex = ({ games }) => {
 
   return (
     <div>
-      <div className='section'>
-        <h1>Games</h1>
-      </div>
-      <div className='section'>
-        <div className='collection'>
-          {games.map(game => <Game game={game} key={game._id} />)}
+      <div className='mdl-grid'>
+        <div className='mdl-cell mdl-cell--12-col'>
+          <h1>Games</h1>
+          <div className='mdl-list'>
+            {games.map(game => <Game game={game} key={game._id} />)}
+          </div>
         </div>
-        <div className='section'>
-          <button className='btn' onClick={handleNewGame}>New game</button>
-        </div>
+        <button className='mdl-button mdl-js-button' onClick={handleNewGame}>New game</button>
       </div>
     </div>
   )
@@ -52,15 +50,14 @@ class Game extends Component {
 
   render() {
     return (
-      <div className='collection-item'>
-        {this.props.game.name}
-        <div className='secondary-content'>
+      <div className='mdl-list__item'>
+        <div className='mdl-list__item-primary-content'>{this.props.game.name}</div>
+        <div className='mdl-list__item-secondary-action'>
           {/* <Link to={`/games/${this.props.game._id}/client`} className='btn'>client</Link> */}
-          <button className='btn' onClick={this.handleJoin}>join game</button>
-          <Link to={`/games/${this.props.game._id}/table`} className='btn'>table</Link>
-          <button className='btn red' onClick={this.handleDelete}>delete</button>
+          <button className='mdl-button mdl-js-button mdl-button--colored mdl-button--raised' onClick={this.handleJoin}>join game</button>
+          <Link to={`/games/${this.props.game._id}/table`} className='mdl-button mdl-js-button'>table</Link>
+          <button className='mdl-button mdl-js-button' onClick={this.handleDelete}>delete</button>
         </div>
-        <div className='clearfix' />
       </div>
     )
   }

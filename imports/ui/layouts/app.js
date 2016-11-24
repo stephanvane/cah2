@@ -1,12 +1,10 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import React, { Component, PropTypes } from 'react'
 import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
 
 export default class App extends Component {
   componentDidMount() {
-    this.view = Blaze.render(Template.loginButtons,
-                             ReactDOM.findDOMNode(this.refs.loginContainer))
+    this.view = Blaze.render(Template.loginButtons, this.loginContainer)
   }
 
   componentWillUnmount() {
@@ -15,10 +13,20 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className='container'>
-        <div ref='loginContainer' />
-        {this.props.children}
+      <div className='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
+        <div className='mdl-layout__header'>
+          <div className='mdl-layout__header-row'>
+            <div ref={(c) => { this.loginContainer = c }} />
+          </div>
+        </div>
+        <main className='mdl-layout__content'>
+          {this.props.children}
+        </main>
       </div>
     )
   }
+}
+
+App.propTypes = {
+  children: PropTypes.node
 }
