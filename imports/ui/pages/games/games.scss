@@ -6,6 +6,13 @@
 //   display: inline-block;
 // }
 
-.card .mdl-card {
-  width: initial;
+.card {
+  .mdl-card {
+    width: initial;
+  }
+
+  &--black {
+    .mdl-card { background: black; }
+    .mdl-card__supporting-text { color: white; }
+  }
 }

@@ -21,27 +21,21 @@ const GamesTable = ({ ready, game }) => {
   }
 
   return (
-    <div>
-      <div className='section'>
+    <div className='mdl-grid'>
+      <div className='mdl-cell mdl-cell--12-col'>
         <h1>Table</h1>
       </div>
-      <div className='section'>
+      <div className='mdl-cell mdl-cell--12-col'>
         {game.players.map(player => player)}
       </div>
-      <div className='section'>
-        <div className='row'>
-          {game.table.blackCard && <Card card={game.table.blackCard} />}
-        </div>
-      </div>
-      <div className='section'>
-        <div className='row'>
-          {game.table.whiteCards.map(card =>
-            <Card card={card} key={card._id} hidden={game.table.hidden} />)}
-        </div>
-      </div>
-      <div className='section'>
-        <button className='btn' onClick={handleNewRound}>New round</button>
-        <button className='btn' onClick={handleReveal}>Reveal cards</button>
+      {game.table.blackCard && <Card card={game.table.blackCard} />}
+      <div className='clearfix' />
+      {game.table.whiteCards.map(card =>
+        <Card card={card} key={card._id} hidden={game.table.hidden} />)}
+
+      <div className='mdl-cell mdl-cell--12-col'>
+        <button className='mdl-button mdl-js-button' onClick={handleNewRound}>New round</button>
+        <button className='mdl-button mdl-js-button' onClick={handleReveal}>Reveal cards</button>
       </div>
     </div>
   )

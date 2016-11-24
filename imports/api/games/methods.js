@@ -28,12 +28,13 @@ Meteor.methods({
 
     players.forEach((player) => {
       const num = 10 - player.cards.length
-      const cards = Cards.find({ _id: { $in: game.whiteDeck.slice(0, num) } }).fetch()
+      const cardIds = game.whiteDeck.slice(0, num)
+      const cards = Cards.find({ _id: { $in: cardIds } }).fetch()
 
       Players.update(player, { $addToSet: { cards: { $each: cards } } })
 
       if (Meteor.isServer) {
-        Games.update(game, { $pull: { whiteDeck: { $in: cards } } })
+        Games.update(game, { $pull: { whiteDeck: { $in: cardIds } } })
       }
     })
 
