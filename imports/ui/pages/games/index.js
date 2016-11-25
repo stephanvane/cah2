@@ -52,12 +52,9 @@ class Game extends Component {
     return (
       <div className='mdl-list__item'>
         <div className='mdl-list__item-primary-content'>{this.props.game.name}</div>
-        <div className='mdl-list__item-secondary-action'>
-          {/* <Link to={`/games/${this.props.game._id}/client`} className='btn'>client</Link> */}
-          <button className='mdl-button mdl-js-button mdl-button--colored mdl-button--raised' onClick={this.handleJoin}>join game</button>
-          <Link to={`/games/${this.props.game._id}/table`} className='mdl-button mdl-js-button'>table</Link>
-          <button className='mdl-button mdl-js-button' onClick={this.handleDelete}>delete</button>
-        </div>
+        <button className='mdl-list__item-secondary-action mdl-button mdl-js-button mdl-button--colored mdl-button--raised' onClick={this.handleJoin}>join game</button>
+        <Link to={`/games/${this.props.game._id}/table`} className='mdl-list__item-secondary-action mdl-button mdl-js-button'>table</Link>
+        <button className='mdl-list__item-secondary-action mdl-button mdl-js-button' onClick={this.handleDelete}>delete</button>
       </div>
     )
   }
