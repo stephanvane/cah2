@@ -13,14 +13,14 @@ const GamesIndex = ({ games }) => {
   return (
     <div>
       <div className='mdl-grid'>
-        <div className='mdl-cell mdl-cell--12-col'>
-          <h1>Games</h1>
+        <h1>Games</h1>
+        <div className='mdl-cell mdl-cell--12-col mdl-card'>
           <div className='mdl-list'>
             {games.map(game => <Game game={game} key={game._id} />)}
           </div>
         </div>
-        <button className='mdl-button mdl-js-button' onClick={handleNewGame}>New game</button>
       </div>
+      <button className='mdl-button mdl-js-button' onClick={handleNewGame}>New game</button>
     </div>
   )
 }
