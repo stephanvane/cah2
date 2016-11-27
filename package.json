@@ -11,7 +11,10 @@
     "react": "^15.3.2",
     "react-addons-pure-render-mixin": "^15.3.2",
     "react-dom": "^15.3.2",
-    "react-router": "^3.0.0"
+    "react-redux": "^4.4.6",
+    "react-router": "^3.0.0",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.0",
@@ -39,8 +42,14 @@
       "import/resolver": "meteor"
     },
     "rules": {
-      "semi": ["error", "never"],
-      "jsx-quotes": ["error", "prefer-single"],
+      "semi": [
+        "error",
+        "never"
+      ],
+      "jsx-quotes": [
+        "error",
+        "prefer-single"
+      ],
       "import/no-extraneous-dependencies": "off",
       "react/jsx-filename-extension": "off",
       "no-underscore-dangle": 0,

@@ -1,21 +1,16 @@
 import React, { PropTypes } from 'react'
 import { Meteor } from 'meteor/meteor'
 import { createContainer } from 'meteor/react-meteor-data'
+import { connect } from 'react-redux'
 
 import Games from '../../../api/games/games'
+import newRound from '../../actions/new_round'
+import reveal from '../../actions/reveal'
 
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
 
-const GamesTable = ({ ready, game }) => {
-  function handleNewRound() {
-    Meteor.call('games.newRound', game._id)
-  }
-
-  function handleReveal() {
-    Meteor.call('games.reveal', game._id)
-  }
-
+const GamesTable = ({ ready, game, handleNewRound, handleReveal }) => {
   if (!ready) {
     return <Spinner />
   }
@@ -34,8 +29,8 @@ const GamesTable = ({ ready, game }) => {
         <Card card={card} key={card._id} hidden={game.table.hidden} />)}
 
       <div className='mdl-cell mdl-cell--12-col'>
-        <button className='mdl-button mdl-js-button' onClick={handleNewRound}>New round</button>
-        <button className='mdl-button mdl-js-button' onClick={handleReveal}>Reveal cards</button>
+        <button className='mdl-button mdl-js-button' onClick={() => handleNewRound(game._id)}>New round</button>
+        <button className='mdl-button mdl-js-button' onClick={() => handleReveal(game._id)}>Reveal cards</button>
       </div>
     </div>
   )
@@ -49,10 +44,12 @@ GamesTable.propTypes = {
       blackCard: PropTypes.any,
       hidden: PropTypes.bool
     })
-  })
+  }),
+  handleReveal: PropTypes.func,
+  handleNewRound: PropTypes.func
 }
 
-export default createContainer((props) => {
+const GameTableContainer = createContainer((props) => {
   const handle = Meteor.subscribe('game', props.params.id)
   const game = Games.findOne(props.params.id)
 
@@ -61,3 +58,12 @@ export default createContainer((props) => {
     ready: handle.ready()
   }
 }, GamesTable)
+
+function mapDispatchToProps(dispatch) {
+  return {
+    handleNewRound(id) { dispatch(newRound(id)) },
+    handleReveal(id) { dispatch(reveal(id)) }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(GameTableContainer)

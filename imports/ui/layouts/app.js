@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { Template } from 'meteor/templating'
 import { Blaze } from 'meteor/blaze'
+import { Provider } from 'react-redux'
+import Store from '../store'
 
 export default class App extends Component {
   componentDidMount() {
@@ -13,16 +15,18 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
-        <div className='mdl-layout__header'>
-          <div className='mdl-layout__header-row'>
-            <div ref={(c) => { this.loginContainer = c }} />
+      <Provider store={Store}>
+        <div className='mdl-layout mdl-js-layout mdl-layout--fixed-header'>
+          <div className='mdl-layout__header'>
+            <div className='mdl-layout__header-row'>
+              <div ref={(c) => { this.loginContainer = c }} />
+            </div>
           </div>
+          <main className='mdl-layout__content'>
+            {this.props.children}
+          </main>
         </div>
-        <main className='mdl-layout__content'>
-          {this.props.children}
-        </main>
-      </div>
+      </Provider>
     )
   }
 }

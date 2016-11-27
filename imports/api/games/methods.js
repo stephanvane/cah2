@@ -53,7 +53,7 @@ Meteor.methods({
     Players.update(player._id, { $pull: { cards: { _id: cardId } } })
   },
 
-  'games.remove': (gameId) => {
+  'games.delete': (gameId) => {
     Games.remove(gameId)
     Players.remove({ gameId })
   },
@@ -63,7 +63,7 @@ Meteor.methods({
   },
 
   'games.join': (gameId) => {
-    const playerData = { gameId, userId: Meteor.userId() }
+    const playerData = { gameId, userId: Meteor.userId(), points: 0 }
     let player = Players.findOne(playerData)
     player = (player) ? player._id : Players.insert({ ...playerData, cards: [] })
     Games.update(gameId, { $addToSet: { players: player } })
