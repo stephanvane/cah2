@@ -7,7 +7,7 @@ import Players from '../../players/players'
 Meteor.publish('game', function publish(id) {
   return [
     Games.find(id),
-    Players.find({ gameId: id, userId: this.userId })
+    Players.find({ gameId: id }, { fields: { _id: 1, points: 1 } })
   ]
 })
 

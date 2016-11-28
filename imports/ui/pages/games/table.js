@@ -4,13 +4,14 @@ import { createContainer } from 'meteor/react-meteor-data'
 import { connect } from 'react-redux'
 
 import Games from '../../../api/games/games'
+import Players from '../../../api/players/players'
 import newRound from '../../actions/new_round'
 import reveal from '../../actions/reveal'
 
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
 
-const GamesTable = ({ ready, game, handleNewRound, handleReveal }) => {
+const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
   if (!ready) {
     return <Spinner />
   }
@@ -21,7 +22,7 @@ const GamesTable = ({ ready, game, handleNewRound, handleReveal }) => {
         <h1>Table</h1>
       </div>
       <div className='mdl-cell mdl-cell--12-col'>
-        {game.players.map(player => player)}
+        {players.map(player => (<span key={player._id} className='mdl-badge' data-badge={player.points}>{player._id}</span>))}
       </div>
       {game.table.blackCard && <Card card={game.table.blackCard} />}
       <div className='clearfix' />
@@ -45,17 +46,21 @@ GamesTable.propTypes = {
       hidden: PropTypes.bool
     })
   }),
+  players: PropTypes.arrayOf(PropTypes.object),
   handleReveal: PropTypes.func,
   handleNewRound: PropTypes.func
 }
 
 const GameTableContainer = createContainer((props) => {
-  const handle = Meteor.subscribe('game', props.params.id)
+  const gameHandler = Meteor.subscribe('game', props.params.id)
+
   const game = Games.findOne(props.params.id)
+  const players = Players.find({}).fetch()
 
   return {
     game,
-    ready: handle.ready()
+    players,
+    ready: gameHandler.ready()
   }
 }, GamesTable)
 
