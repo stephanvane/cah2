@@ -22,3 +22,4 @@ react-meteor-data
 fourseven:scss
 accounts-github@1.0.11
 accounts-ui@1.1.9
+accounts-password
