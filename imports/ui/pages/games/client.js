@@ -1,60 +1,56 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { createContainer } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
+import { connect } from 'react-redux'
 
-import Games from '../../../api/games/games'
 import Players from '../../../api/players/players'
-
+import playCard from '../../actions/play_card'
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
 
-class GamesClient extends Component {
-  constructor(props) {
-    super(props)
-    this.handlePlayCard = this.handlePlayCard.bind(this)
+function GamesClient({ gameId, cards, handlePlayCard, ready }) {
+  if (!ready) {
+    return <Spinner />
   }
 
-  handlePlayCard(cardId) {
-    Meteor.call('games.playCard', this.props.game._id, cardId)
-  }
-
-  render() {
-    if (!this.props.ready) {
-      return <Spinner />
-    }
-
-    return (
-      <div className='mdl-grid'>
-        {this.props.cards.map(card => <Card
-          card={card} key={card._id}
-          click={this.handlePlayCard}
-        />)}
-      </div>
-    )
-  }
+  return (
+    <div className='mdl-grid'>
+      {cards.map(card => <Card
+        card={card} key={card._id}
+        click={() => handlePlayCard(gameId, card._id)}
+      />)}
+    </div>
+  )
 }
 
 GamesClient.propTypes = {
-  game: PropTypes.shape({
-    _id: PropTypes.string.isRequired
-  }),
+  gameId: PropTypes.string.isRequired,
   cards: PropTypes.arrayOf(
     PropTypes.object
   ),
-  ready: PropTypes.bool.isRequired
+  ready: PropTypes.bool.isRequired,
+  handlePlayCard: PropTypes.func.isRequired
 }
 
-export default createContainer((props) => {
+const GamesClientContainer = createContainer((props) => {
   const handle = Meteor.subscribe('game', props.params.id)
 
-  const game = Games.findOne(props.params.id)
+  const gameId = props.params.id
   const player = Players.findOne({})
   const cards = (player) ? player.cards : []
 
   return {
-    game,
+    gameId,
     ready: handle.ready(),
     player,
     cards
   }
 }, GamesClient)
+
+function mapDispatchToProps(dispatch) {
+  return {
+    handlePlayCard: (gameId, cardId) => dispatch(playCard(gameId, cardId))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(GamesClientContainer)
