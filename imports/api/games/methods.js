@@ -18,7 +18,8 @@ Meteor.methods({
       whiteDeck: newDeck('white'),
       blackDeck: newDeck('black'),
       table: { whiteCards: [], hidden: true },
-      players: []
+      players: [],
+      czar: null
     })
   },
 
@@ -26,21 +27,24 @@ Meteor.methods({
     const game = Games.findOne(gameId)
     const players = Players.find({ _id: { $in: game.players } })
 
-    players.forEach((player) => {
-      const num = 10 - player.cards.length
-      const cardIds = game.whiteDeck.slice(0, num)
-      const cards = Cards.find({ _id: { $in: cardIds } }).fetch()
+    if (Meteor.isServer) {
+      players.forEach((player) => {
+        const num = 10 - player.cards.length
+        const cardIds = game.whiteDeck.slice(0, num)
+        const cards = Cards.find({ _id: { $in: cardIds } }).fetch()
 
-      Players.update(player, { $addToSet: { cards: { $each: cards } } })
-
-      if (Meteor.isServer) {
+        Players.update(player, { $addToSet: { cards: { $each: cards } } })
         Games.update(game, { $pull: { whiteDeck: { $in: cardIds } } })
-      }
-    })
+      })
+    }
 
     const blackCard = Cards.findOne(game.blackDeck[0])
+    const currentCzarIndex = game.players.indexOf(game.czar)
+    const czar = currentCzarIndex > -1 ?
+      game.players[(currentCzarIndex + 1) % game.players.length] :
+      game.players[0]
     Games.update(game._id, {
-      $set: { 'table.blackCard': blackCard, 'table.whiteCards': [], 'table.hidden': true },
+      $set: { 'table.blackCard': blackCard, 'table.whiteCards': [], 'table.hidden': true, czar },
       $pop: { blackDeck: -1 } })
   },
 
@@ -67,5 +71,12 @@ Meteor.methods({
     let player = Players.findOne(playerData)
     player = (player) ? player._id : Players.insert({ ...playerData, cards: [] })
     Games.update(gameId, { $addToSet: { players: player } })
+  },
+
+  'games.chooseWinner': (gameId, cardIndex) => {
+    const game = Games.findOne(gameId)
+    const winningCard = game.table.whiteCards[cardIndex]
+    const winningPlayer = Players.findOne(winningCard.playedBy)
+    // TODO: finish this
   }
 })

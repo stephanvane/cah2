@@ -10,6 +10,7 @@ import reveal from '../../actions/reveal'
 
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
+import PlayerChip from '../../components/player_chip'
 
 const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
   if (!ready) {
@@ -19,10 +20,12 @@ const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
   return (
     <div className='mdl-grid'>
       <div className='mdl-cell mdl-cell--12-col'>
-        <h1>Table</h1>
+        {/* <h1>Table</h1> */}
       </div>
       <div className='mdl-cell mdl-cell--12-col'>
-        {players.map(player => (<span key={player._id} className='mdl-badge' data-badge={player.points}>{player._id}</span>))}
+        {players.map(player =>
+          <PlayerChip key={player._id} player={player} colored={game.czar === player._id} />
+        )}
       </div>
       {game.table.blackCard && <Card card={game.table.blackCard} />}
       <div className='clearfix' />
@@ -39,7 +42,6 @@ const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
 GamesTable.propTypes = {
   ready: PropTypes.bool.isRequired,
   game: PropTypes.shape({
-    players: PropTypes.arrayOf(PropTypes.string).isRequired,
     table: PropTypes.shape({
       whiteCards: PropTypes.arrayOf(PropTypes.any),
       blackCard: PropTypes.any,
@@ -48,19 +50,21 @@ GamesTable.propTypes = {
   }),
   players: PropTypes.arrayOf(PropTypes.object),
   handleReveal: PropTypes.func,
-  handleNewRound: PropTypes.func
+  handleNewRound: PropTypes.func,
 }
 
 const GameTableContainer = createContainer((props) => {
-  const gameHandler = Meteor.subscribe('game', props.params.id)
+  const gameHandle = Meteor.subscribe('game', props.params.id)
 
   const game = Games.findOne(props.params.id)
   const players = Players.find({}).fetch()
+  const currentPlayer = Players.findOne({ userId: Meteor.userId() })
 
   return {
     game,
     players,
-    ready: gameHandler.ready()
+    currentPlayer,
+    ready: gameHandle.ready()
   }
 }, GamesTable)
 

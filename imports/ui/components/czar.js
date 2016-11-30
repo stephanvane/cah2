@@ -1,33 +1,36 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import Card from './card'
+import chooseWinner from '../actions/choose_winner'
+import reveal from '../actions/reveal'
 
 // Czar
-class Czar extends Component {
-  constructor(props) {
-    super(props)
-    this.handleChooseWinner = this.handleChooseWinner.bind(this)
-  }
+const Czar = ({ game, handleChooseWinner, handleReveal }) => (
+  <div>
+    {/* <h1>Card Czar</h1>
+    Choose the winning card! */}
+    <div className='mdl-grid'>
+      {game.table.whiteCards.map((card, index) => <Card
+        card={card} hidden={game.table.hidden} key={card._id}
+        click={() => handleChooseWinner(game._id, index)}
+      />)}
 
-  handleChooseWinner() {
-
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>Card Czar</h1>
-        Choose the winning card!
-        {this.props.cards.map(card => <Card
-          card={card} key={card._id}
-          click={this.handleChooseWinner}
-        />)}
+      <div className='mdl-cell mdl-cell--12-col'>
+        <button className='mdl-button mdl-js-button' onClick={() => handleReveal(game._id)}>Reveal cards</button>
       </div>
-    )
-  }
+    </div>
+  </div>
+)
+
+Czar.propTypes = {
+  game: PropTypes.shape().isRequired,
+  handleChooseWinner: PropTypes.func.isRequired,
+  handleReveal: PropTypes.func.isRequired
 }
 
-export default Czar
+const mapDispatchToProps = {
+  handleChooseWinner: chooseWinner,
+  handleReveal: reveal
+}
 
-// Czar.propTypes = {
-//   cards: PropTypes.arrayOf(PropTypes.object),
-//   game: Prop
-// }
+export default connect(null, mapDispatchToProps)(Czar)

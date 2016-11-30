@@ -9,10 +9,17 @@
 .card {
   .mdl-card {
     width: initial;
+    min-height: 100px;
+    &__supporting-text {
+      box-sizing: border-box;
+      width: 100%;
+    }
   }
 
   &--black {
-    .mdl-card { background: black; }
-    .mdl-card__supporting-text { color: white; }
+    .mdl-card {
+      background: black;
+      &__supporting-text { color: white; }
+    }
   }
 }

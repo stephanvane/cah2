@@ -15,14 +15,10 @@ export default class Card extends Component {
     const cardText = (this.props.hidden) ? '' : card.text
 
     return (
-      // <div className='col s6 m4 l3'>
       <div className={`mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet mdl-cell--2-col-phone card card--${card.type}`} onClick={this._onClick}>
         <div className='mdl-card mdl-shadow--2dp'>
           <div className='mdl-card__supporting-text'>{cardText}</div>
         </div>
-        {/* <div className={`card-panel ${panelColor}`} onClick={this._onClick}>
-          <div className={`${textColor}-text`}>{cardText}</div>
-        </div> */}
       </div>
     )
   }
