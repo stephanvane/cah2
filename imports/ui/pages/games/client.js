@@ -16,7 +16,7 @@ function GamesClient({ player, game, cards, handlePlayCard, ready }) {
   }
 
   if (game.czar === player._id) {
-    return <Czar game={game} />
+    // return <Czar game={game} />
   }
 
   return (

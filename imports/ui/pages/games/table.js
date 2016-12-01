@@ -27,10 +27,10 @@ const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
           <PlayerChip key={player._id} player={player} colored={game.czar === player._id} />
         )}
       </div>
-      {game.table.blackCard && <Card card={game.table.blackCard} />}
+      {game.blackCard && <Card card={game.blackCard} />}
       <div className='clearfix' />
-      {game.table.whiteCards.map(card =>
-        <Card card={card} key={card._id} hidden={game.table.hidden} />)}
+      {game.entries.map(entry =>
+        <Card card={entry.card} key={entry.card._id} hidden={game.cardsHidden} />)}
 
       <div className='mdl-cell mdl-cell--12-col'>
         <button className='mdl-button mdl-js-button' onClick={() => handleNewRound(game._id)}>New round</button>

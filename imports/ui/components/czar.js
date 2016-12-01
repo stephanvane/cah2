@@ -10,9 +10,9 @@ const Czar = ({ game, handleChooseWinner, handleReveal }) => (
     {/* <h1>Card Czar</h1>
     Choose the winning card! */}
     <div className='mdl-grid'>
-      {game.table.whiteCards.map((card, index) => <Card
-        card={card} hidden={game.table.hidden} key={card._id}
-        click={() => handleChooseWinner(game._id, index)}
+      {game.entries.map(entry => <Card
+        card={entry.card} hidden={game.table.hidden} key={entry.card._id}
+        click={() => handleChooseWinner(entry.playedBy)}
       />)}
 
       <div className='mdl-cell mdl-cell--12-col'>
