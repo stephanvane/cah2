@@ -32,7 +32,7 @@ Meteor.methods({
     if (Meteor.isServer) {
       players.forEach((player) => {
         const num = 10 - player.cards.length
-        const cardIds = game.whiteDeck.slice(0, num)
+        const cardIds = game.whiteDeck.splice(0, num)
         const cards = Cards.find({ _id: { $in: cardIds } }).fetch()
 
         Players.update(player, { $addToSet: { cards: { $each: cards } } })
@@ -56,7 +56,7 @@ Meteor.methods({
     const player = Players.findOne({ userId: Meteor.userId(), gameId })
     // if (Meteor.isServer) card.hidden = true // TODO: make work on client
     // Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
-    Games.update(game._id, { $addToSet: { entries: { card, playedBy: player._id } } })
+    Games.update(game._id, { $addToSet: { entries: { cards: [card], playedBy: player._id } } })
     Players.update(player._id, { $pull: { cards: { _id: cardId } } })
   },
 

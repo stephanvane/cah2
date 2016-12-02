@@ -9,7 +9,7 @@ import newRound from '../../actions/new_round'
 import reveal from '../../actions/reveal'
 
 import Spinner from '../../components/spinner'
-import Card from '../../components/card'
+import Table from '../../components/table'
 import PlayerChip from '../../components/player_chip'
 
 const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
@@ -18,23 +18,26 @@ const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
   }
 
   return (
-    <div className='mdl-grid'>
-      <div className='mdl-cell mdl-cell--12-col'>
-        {/* <h1>Table</h1> */}
-      </div>
-      <div className='mdl-cell mdl-cell--12-col'>
-        {players.map(player =>
-          <PlayerChip key={player._id} player={player} colored={game.czar === player._id} />
-        )}
-      </div>
-      {game.blackCard && <Card card={game.blackCard} />}
-      <div className='clearfix' />
-      {game.entries.map(entry =>
-        <Card card={entry.card} key={entry.card._id} hidden={game.cardsHidden} />)}
+    <div>
+      <div className='mdl-grid'>
+        <div className='mdl-cell mdl-cell--12-col'>
+          <h1>Table</h1>
+        </div>
 
-      <div className='mdl-cell mdl-cell--12-col'>
-        <button className='mdl-button mdl-js-button' onClick={() => handleNewRound(game._id)}>New round</button>
-        <button className='mdl-button mdl-js-button' onClick={() => handleReveal(game._id)}>Reveal cards</button>
+        <div className='mdl-cell mdl-cell--12-col'>
+          {players.map(player =>
+            <PlayerChip key={player._id} player={player} colored={game.czar === player._id} />
+          )}
+        </div>
+      </div>
+
+      <Table game={game} />
+
+      <div className='mdl-grid'>
+        <div className='mdl-cell mdl-cell--12-col'>
+          <button className='mdl-button mdl-js-button' onClick={() => handleNewRound(game._id)}>New round</button>
+          <button className='mdl-button mdl-js-button' onClick={() => handleReveal(game._id)}>Reveal cards</button>
+        </div>
       </div>
     </div>
   )

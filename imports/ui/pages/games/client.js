@@ -16,14 +16,14 @@ function GamesClient({ player, game, cards, handlePlayCard, ready }) {
   }
 
   if (game.czar === player._id) {
-    // return <Czar game={game} />
+    return <Czar game={game} />
   }
 
   return (
     <div className='mdl-grid'>
       {cards.map(card => <Card
         card={card} key={card._id}
-        click={() => handlePlayCard(game._id, card._id)}
+        onClick={() => handlePlayCard(game._id, card._id)}
       />)}
     </div>
   )
