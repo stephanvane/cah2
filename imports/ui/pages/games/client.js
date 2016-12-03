@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Players from '../../../api/players/players'
 import Games from '../../../api/games/games'
 import playCard from '../../actions/play_card'
+import wonRound from '../../actions/won_round'
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
 import Czar from '../../components/czar'
@@ -42,7 +43,17 @@ const GamesClientContainer = createContainer((props) => {
   const playerHandle = Meteor.subscribe('player', props.params.id)
 
   const game = Games.findOne(props.params.id)
-  const player = Players.findOne({ userId: Meteor.userId() })
+  let player = Players.find({ userId: Meteor.userId() })
+
+  player.observeChanges({
+    changed: (id, fields) => {
+      console.log(id, fields)
+      props.handleWonRound()
+    }
+  })
+
+  player = player.fetch()[0]
+
   const cards = (player) ? player.cards : []
 
   return {
@@ -54,7 +65,8 @@ const GamesClientContainer = createContainer((props) => {
 }, GamesClient)
 
 const mapDispatchToProps = {
-  handlePlayCard: playCard
+  handlePlayCard: playCard,
+  handleWonRound: wonRound
 }
 
 export default connect(null, mapDispatchToProps)(GamesClientContainer)

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 
-export default function chooseWinner(gameId, cardIndex) {
+export default function chooseWinner(entry) {
   return (dispatch) => {
-    dispatch({ type: 'winner', gameId, cardIndex })
-    Meteor.call('games.chooseWinner', gameId, cardIndex)
+    dispatch({ type: 'winner', entry })
+    Meteor.call('games.chooseWinner', entry)
   }
 }

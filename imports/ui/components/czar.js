@@ -7,7 +7,7 @@ import reveal from '../actions/reveal'
 // Czar
 const Czar = ({ game, handleChooseWinner, handleReveal }) => (
   <div>
-    <Table game={game} click={handleChooseWinner} />
+    <Table game={game} onClick={handleChooseWinner} />
 
     <div className='mdl-grid'>
       <div className='mdl-cell mdl-cell--12-col'>

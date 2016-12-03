@@ -54,8 +54,6 @@ Meteor.methods({
     const game = Games.findOne(gameId)
     const card = Cards.findOne(cardId)
     const player = Players.findOne({ userId: Meteor.userId(), gameId })
-    // if (Meteor.isServer) card.hidden = true // TODO: make work on client
-    // Games.update(game._id, { $addToSet: { 'table.whiteCards': card } })
     Games.update(game._id, { $addToSet: { entries: { cards: [card], playedBy: player._id } } })
     Players.update(player._id, { $pull: { cards: { _id: cardId } } })
   },
@@ -66,20 +64,19 @@ Meteor.methods({
   },
 
   'games.reveal': (gameId) => {
-    Games.update(gameId, { $set: { cardsHidden: false } })
+    const game = Games.findOne(gameId, { fields: { entries: 1 } })
+    const entries = _.shuffle(game.entries)
+    Games.update(gameId, { $set: { cardsHidden: false, entries } })
   },
 
   'games.join': (gameId) => {
-    const playerData = { gameId, userId: Meteor.userId(), points: 0 }
+    const playerData = { gameId, userId: this.userId }
     let player = Players.findOne(playerData)
-    player = (player) ? player._id : Players.insert({ ...playerData, cards: [] })
+    player = (player) ? player._id : Players.insert({ ...playerData, cards: [], points: 0 })
     Games.update(gameId, { $addToSet: { players: player } })
   },
 
-  'games.chooseWinner': (gameId, entry) => {
-    // const game = Games.findOne(gameId)
-    // const winningCard = game.entrieswhiteCards[cardIndex]
-    // const winningPlayer = Players.findOne(winningCard.playedBy)
-    // TODO: finish this
+  'games.chooseWinner': (entry) => {
+    Players.update(entry.playedBy, { $inc: { points: 1 } })
   }
 })
