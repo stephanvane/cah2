@@ -1,17 +1,13 @@
 import React from 'react'
 
 const Spinner = () => (
-  <div className='preloader-wrapper active'>
-    <div className='spinner-layer spinner-red-only'>
-      <div className='circle-clipper left'>
-        <div className='circle' />
-      </div><div className='gap-patch'>
-        <div className='circle' />
-      </div><div className='circle-clipper right'>
-        <div className='circle' />
-      </div>
+  <div className='mdl-grid'>
+    <div className='mdl-cell mdl-cell--12-col'>
+      <div className='mdl-spinner mdl-js-spinner is-active' />
     </div>
   </div>
+  // <div className='mdl-progress mdl-js-progress mdl-progress__indeterminate' />
+
 )
 
 export default Spinner

@@ -24,6 +24,10 @@ export default class App extends Component {
           </div>
           <main className='mdl-layout__content'>
             {this.props.children}
+            <div className='mdl-js-snackbar mdl-snackbar'>
+              <div className='mdl-snackbar__text' />
+              <div className='mdl-snackbar__action' />
+            </div>
           </main>
         </div>
       </Provider>

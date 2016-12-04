@@ -10,29 +10,47 @@ import wonRound from '../../actions/won_round'
 import Spinner from '../../components/spinner'
 import Card from '../../components/card'
 import Czar from '../../components/czar'
+import Score from '../../components/score'
 
-function GamesClient({ player, game, cards, handlePlayCard, ready }) {
+function GamesClient({ player, game, handlePlayCard, ready }) {
   if (!ready) {
     return <Spinner />
   }
 
+  // Render Czar or player's own hand
+  let content = null
+
   if (game.czar === player._id) {
-    return <Czar game={game} />
+    content = <Czar game={game} />
+  } else {
+    content = (
+      <div className='mdl-grid'>
+        {player.cards.map(card => <Card
+          card={card} key={card._id}
+          onClick={() => handlePlayCard(game._id, card._id)}
+        />)}
+      </div>
+    )
   }
 
   return (
-    <div className='mdl-grid'>
-      {cards.map(card => <Card
-        card={card} key={card._id}
-        onClick={() => handlePlayCard(game._id, card._id)}
-      />)}
+    <div className='mdl-grid mdl-grid--no-spacing'>
+      <div className='mdl-cell mdl-cell--2-col'>
+        <div className='mdl-grid'>
+          <div className='mdl-cell mdl-cell--12-col'>
+            <Score game={game} className='bla' />
+          </div>
+        </div>
+      </div>
+      <div className='mdl-cell mdl-cell--10-col'>
+        {content}
+      </div>
     </div>
   )
 }
 
 GamesClient.propTypes = {
   game: PropTypes.shape(),
-  cards: PropTypes.arrayOf(PropTypes.object),
   ready: PropTypes.bool.isRequired,
   handlePlayCard: PropTypes.func.isRequired,
   player: PropTypes.shape()
@@ -46,21 +64,17 @@ const GamesClientContainer = createContainer((props) => {
   let player = Players.find({ userId: Meteor.userId() })
 
   player.observeChanges({
-    changed: (id, fields) => {
-      console.log(id, fields)
-      props.handleWonRound()
+    changed: (id) => {
+      props.handleWonRound(id)
     }
   })
 
   player = player.fetch()[0]
 
-  const cards = (player) ? player.cards : []
-
   return {
     game,
     ready: gameHandle.ready() && playerHandle.ready(),
-    player,
-    cards
+    player
   }
 }, GamesClient)
 
