@@ -69,7 +69,8 @@ Meteor.methods({
     Games.update(gameId, { $set: { cardsHidden: false, entries } })
   },
 
-  'games.join': (gameId) => {
+  // Need to use 'function' to make sure 'this.userId' works
+  'games.join': function join(gameId) {
     const playerData = { gameId, userId: this.userId }
     let player = Players.findOne(playerData)
     player = (player) ? player._id : Players.insert({ ...playerData, cards: [], points: 0 })
