@@ -10,7 +10,7 @@ import Game from '../../components/game'
 const GamesIndex = ({ games, handleNewGame }) => (
   <div>
     <div className='mdl-grid'>
-      <h1>Games</h1>
+      {/* <h1>Games</h1> */}
       <div className='mdl-cell mdl-cell--12-col mdl-card'>
         <div className='mdl-list'>
           {games.map(game => <Game game={game} key={game._id} />)}

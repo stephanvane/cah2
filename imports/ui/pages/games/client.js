@@ -12,7 +12,7 @@ import Card from '../../components/card'
 import Czar from '../../components/czar'
 import Score from '../../components/score'
 
-function GamesClient({ player, game, handlePlayCard, ready }) {
+function GamesClient({ players, player, game, handlePlayCard, ready }) {
   if (!ready) {
     return <Spinner />
   }
@@ -35,14 +35,14 @@ function GamesClient({ player, game, handlePlayCard, ready }) {
 
   return (
     <div className='mdl-grid mdl-grid--no-spacing'>
-      <div className='mdl-cell mdl-cell--2-col'>
+      <div className='mdl-cell mdl-cell--4-col'>
         <div className='mdl-grid'>
-          <div className='mdl-cell mdl-cell--12-col'>
-            <Score game={game} className='bla' />
+          <div className='mdl-cell mdl-cell--12-col mdl-card mdl-shadow--2dp'>
+            <Score players={players} currentPlayerId={player._id} czarId={game.czar} />
           </div>
         </div>
       </div>
-      <div className='mdl-cell mdl-cell--10-col'>
+      <div className='mdl-cell mdl-cell--8-col'>
         {content}
       </div>
     </div>
@@ -53,7 +53,8 @@ GamesClient.propTypes = {
   game: PropTypes.shape(),
   ready: PropTypes.bool.isRequired,
   handlePlayCard: PropTypes.func.isRequired,
-  player: PropTypes.shape()
+  player: PropTypes.shape(),
+  players: PropTypes.arrayOf(PropTypes.shape)
 }
 
 const GamesClientContainer = createContainer((props) => {
@@ -61,6 +62,7 @@ const GamesClientContainer = createContainer((props) => {
   const playerHandle = Meteor.subscribe('player', props.params.id)
 
   const game = Games.findOne(props.params.id)
+  const players = Players.find({}).fetch()
   let player = Players.find({ userId: Meteor.userId() })
 
   player.observeChanges({
@@ -72,6 +74,7 @@ const GamesClientContainer = createContainer((props) => {
   player = player.fetch()[0]
 
   return {
+    players,
     game,
     ready: gameHandle.ready() && playerHandle.ready(),
     player

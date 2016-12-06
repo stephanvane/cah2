@@ -21,7 +21,7 @@ const GamesTable = ({ ready, game, players, handleNewRound, handleReveal }) => {
     <div>
       <div className='mdl-grid'>
         <div className='mdl-cell mdl-cell--12-col'>
-          <h1>Table</h1>
+          {/* <h1>Table</h1> */}
         </div>
 
         <div className='mdl-cell mdl-cell--12-col'>
